@@ -662,8 +662,16 @@ void drawObstacles(duDebugDraw* dd, const dtTileCache* tc)
 		else if (ob->state == DT_OBSTACLE_REMOVING)
 			col = duRGBA(220,0,0,128);
 
-		duDebugDrawCylinder(dd, bmin[0],bmin[1],bmin[2], bmax[0],bmax[1],bmax[2], col);
-		duDebugDrawCylinderWire(dd, bmin[0],bmin[1],bmin[2], bmax[0],bmax[1],bmax[2], duDarkenCol(col), 2);
+		if (ob->type == DT_OBSTACLE_CYLINDER)
+		{
+			duDebugDrawCylinder(dd, bmin[0], bmin[1], bmin[2], bmax[0], bmax[1], bmax[2], col);
+			duDebugDrawCylinderWire(dd, bmin[0], bmin[1], bmin[2], bmax[0], bmax[1], bmax[2], duDarkenCol(col), 2);
+		}
+		else
+		{
+			duDebugDrawBox(dd, bmin[0], bmin[1], bmin[2], bmax[0], bmax[1], bmax[2], &col);
+			duDebugDrawBoxWire(dd, bmin[0], bmin[1], bmin[2], bmax[0], bmax[1], bmax[2], duDarkenCol(col), 2);
+		}	
 	}
 }
 
@@ -768,10 +776,17 @@ public:
 class TempObstacleCreateTool : public SampleTool
 {
 	Sample_TempObstacles* m_sample;
+	bool m_isCylinder;
+	float m_radius;
+	float m_height;
 	
 public:
 	
-	TempObstacleCreateTool() : m_sample(0)
+	TempObstacleCreateTool() 
+		: m_sample(0)
+		, m_isCylinder(true)
+		, m_radius(0.3f)
+		, m_height(2.f)
 	{
 	}
 	
@@ -797,6 +812,32 @@ public:
 		
 		imguiSeparator();
 
+		imguiLabel("Obstacles Type");
+		if (imguiCheck("Box", !m_isCylinder))
+		{
+			m_isCylinder = false;
+			m_radius = 1.f;
+			m_height = 1.f;
+		}
+		if (imguiCheck("Cylinder", m_isCylinder))
+		{
+			m_isCylinder = true;
+			m_radius = 0.3f;
+			m_height = 2.f;
+		}
+
+		imguiLabel("Obstacles Size");
+		if (m_isCylinder)
+		{
+			imguiSlider("Cylinder Radius", &m_radius, 0.1f, 5.f, 0.1f);
+			imguiSlider("Cylinder Height", &m_height, 1.f, 10.f, 0.1f);
+		}
+		else
+		{
+			imguiSlider("Box Width", &m_radius, 0.3f, 10.f, 0.1f);
+			imguiSlider("Box Height", &m_height, 0.3f, 10.f, 0.1f);
+		}
+
 		imguiValue("Click LMB to create an obstacle.");
 		imguiValue("Shift+LMB to remove an obstacle.");
 	}
@@ -808,7 +849,16 @@ public:
 			if (shift)
 				m_sample->removeTempObstacle(s,p);
 			else
-				m_sample->addTempObstacle(p);
+			{
+				if (m_isCylinder)
+				{
+					m_sample->addTempCylinderObstacle(p, m_radius, m_height);
+				}
+				else
+				{
+					m_sample->addTempBoxObstacle(p, m_radius, m_height);
+				}
+			}
 		}
 	}
 	
@@ -1161,14 +1211,37 @@ void Sample_TempObstacles::handleMeshChanged(class InputGeom* geom)
 	initToolStates(this);
 }
 
-void Sample_TempObstacles::addTempObstacle(const float* pos)
+void Sample_TempObstacles::addTempCylinderObstacle(const float* pos, const float radius, const float height)
 {
 	if (!m_tileCache)
 		return;
 	float p[3];
 	dtVcopy(p, pos);
-	p[1] -= 0.5f;
-	m_tileCache->addObstacle(p, 1.0f, 2.0f, 0);
+	p[1] -= height / 2.f;
+
+	m_tileCache->addObstacle(p, radius, height, 0);
+}
+
+
+void Sample_TempObstacles::addTempBoxObstacle(const float* pos, const float width, const float height)
+{
+	if (!m_tileCache)
+		return;
+	float min[3];
+	float max[3];
+
+	dtVcopy(min, pos);
+	dtVcopy(max, pos);
+
+	min[0] -= width / 2.f;
+	min[1] -= 0.5f;
+	min[2] -= height / 2.f;
+
+	max[0] += width / 2.f;
+	max[1] += 0.5f;
+	max[2] += height / 2.f;
+
+	m_tileCache->addBoxObstacle(min, max, 0);
 }
 
 void Sample_TempObstacles::removeTempObstacle(const float* sp, const float* sq)

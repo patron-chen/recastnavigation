@@ -62,6 +62,9 @@ protected:
 	DrawMode m_drawMode;
 	
 	void cleanup();
+
+	void saveData(const char* path);
+	void loadData(const char* path);
 		
 public:
 	Sample_SoloMesh();
@@ -80,6 +83,10 @@ private:
 	// Explicitly disabled copy constructor and copy assignment operator.
 	Sample_SoloMesh(const Sample_SoloMesh&);
 	Sample_SoloMesh& operator=(const Sample_SoloMesh&);
+
+private:
+	int m_navDataSize;
+	unsigned char* m_navData;
 };
 
 

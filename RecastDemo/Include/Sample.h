@@ -131,6 +131,7 @@ protected:
 	BuildContext* m_ctx;
 
 	SampleDebugDraw m_dd;
+	char m_meshName[128];
 	
 public:
 	Sample();
@@ -176,6 +177,8 @@ public:
 
 	void resetCommonSettings();
 	void handleCommonSettings();
+
+	void setMeshName(const char* name);
 
 private:
 	// Explicitly disabled copy constructor and copy assignment operator.

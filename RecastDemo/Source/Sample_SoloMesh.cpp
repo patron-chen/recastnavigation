@@ -52,7 +52,9 @@ Sample_SoloMesh::Sample_SoloMesh() :
 	m_cset(0),
 	m_pmesh(0),
 	m_dmesh(0),
-	m_drawMode(DRAWMODE_NAVMESH)
+	m_drawMode(DRAWMODE_NAVMESH),
+	m_navDataSize(0),
+	m_navData(NULL)
 {
 	setTool(new NavMeshTesterTool);
 }
@@ -80,6 +82,60 @@ void Sample_SoloMesh::cleanup()
 	m_navMesh = 0;
 }
 			
+void Sample_SoloMesh::saveData(const char* path)
+{
+	FILE* fp = fopen(path, "wb");
+	if (!fp)
+		return;
+
+	fwrite(&m_navDataSize, sizeof(int), 1, fp);
+	fwrite(m_navData, m_navDataSize, 1, fp);
+
+	fclose(fp);
+}
+
+
+void Sample_SoloMesh::loadData(const char* path)
+{
+	FILE* fp = fopen(path, "rb");
+	if (!fp)
+		return;
+
+	cleanup();
+
+	int navDataSize = 0;
+	fread(&navDataSize, sizeof(int), 1, fp);
+	unsigned char* navData = (unsigned char*)dtAlloc(sizeof(unsigned char)*navDataSize, DT_ALLOC_PERM);
+	fread(navData, navDataSize, 1, fp);
+
+	m_navMesh = dtAllocNavMesh();
+	if (!m_navMesh)
+	{
+		dtFree(navData);
+		m_ctx->log(RC_LOG_ERROR, "Could not create Detour navmesh");
+		return;
+	}
+
+	dtStatus status;
+
+	status = m_navMesh->init(navData, navDataSize, DT_TILE_FREE_DATA);
+	if (dtStatusFailed(status))
+	{
+		dtFree(navData);
+		m_ctx->log(RC_LOG_ERROR, "Could not init Detour navmesh");
+		return;
+	}
+
+	status = m_navQuery->init(m_navMesh, 2048);
+	if (dtStatusFailed(status))
+	{
+		m_ctx->log(RC_LOG_ERROR, "Could not init Detour navmesh query");
+		return;
+	}
+
+	fclose(fp);
+}
+
 void Sample_SoloMesh::handleSettings()
 {
 	Sample::handleCommonSettings();
@@ -94,6 +150,28 @@ void Sample_SoloMesh::handleSettings()
 	imguiLabel(msg);
 	
 	imguiSeparator();
+
+	if (imguiButton("Save"))
+	{
+		char filePath[512];
+		memset(filePath, 0, 512);
+		std::string temp = m_meshName;
+		temp = temp.substr(0, temp.length() - 4);
+
+		sprintf(filePath, "./Output/%s.nav", temp.c_str());
+		saveData(filePath);
+	}
+
+	if (imguiButton("Load"))
+	{
+		char filePath[512];
+		memset(filePath, 0, 512);
+		std::string temp = m_meshName;
+		temp = temp.substr(0, temp.length() - 4);
+
+		sprintf(filePath, "./Output/%s.nav", temp.c_str());
+		loadData(filePath);
+	}
 }
 
 void Sample_SoloMesh::handleTools()
@@ -633,8 +711,8 @@ bool Sample_SoloMesh::handleBuild()
 	// Only build the detour navmesh if we do not exceed the limit.
 	if (m_cfg.maxVertsPerPoly <= DT_VERTS_PER_POLYGON)
 	{
-		unsigned char* navData = 0;
-		int navDataSize = 0;
+		m_navDataSize = 0;
+		m_navData = NULL;
 
 		// Update poly flags from areas.
 		for (int i = 0; i < m_pmesh->npolys; ++i)
@@ -689,7 +767,7 @@ bool Sample_SoloMesh::handleBuild()
 		params.ch = m_cfg.ch;
 		params.buildBvTree = true;
 		
-		if (!dtCreateNavMeshData(&params, &navData, &navDataSize))
+		if (!dtCreateNavMeshData(&params, &m_navData, &m_navDataSize))
 		{
 			m_ctx->log(RC_LOG_ERROR, "Could not build Detour navmesh.");
 			return false;
@@ -698,17 +776,17 @@ bool Sample_SoloMesh::handleBuild()
 		m_navMesh = dtAllocNavMesh();
 		if (!m_navMesh)
 		{
-			dtFree(navData);
+			dtFree(m_navData);
 			m_ctx->log(RC_LOG_ERROR, "Could not create Detour navmesh");
 			return false;
 		}
 		
 		dtStatus status;
 		
-		status = m_navMesh->init(navData, navDataSize, DT_TILE_FREE_DATA);
+		status = m_navMesh->init(m_navData, m_navDataSize, DT_TILE_FREE_DATA);
 		if (dtStatusFailed(status))
 		{
-			dtFree(navData);
+			dtFree(m_navData);
 			m_ctx->log(RC_LOG_ERROR, "Could not init Detour navmesh");
 			return false;
 		}
@@ -722,7 +800,7 @@ bool Sample_SoloMesh::handleBuild()
 	}
 	
 	m_ctx->stopTimer(RC_TIMER_TOTAL);
-
+	
 	// Show performance stats.
 	duLogBuildTimes(*m_ctx, m_ctx->getAccumulatedTime(RC_TIMER_TOTAL));
 	m_ctx->log(RC_LOG_PROGRESS, ">> Polymesh: %d vertices  %d polygons", m_pmesh->nverts, m_pmesh->npolys);

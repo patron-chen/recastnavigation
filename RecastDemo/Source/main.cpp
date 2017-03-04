@@ -549,6 +549,12 @@ int main(int /*argc*/, char** /*argv*/)
 			
 			imguiSeparator();
 			imguiLabel("Input Mesh");
+
+			if (sample)
+			{
+				sample->setMeshName(meshName.c_str());
+			}
+
 			if (imguiButton(meshName.c_str()))
 			{
 				if (showLevels)

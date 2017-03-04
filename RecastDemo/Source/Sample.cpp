@@ -246,6 +246,12 @@ void Sample::handleCommonSettings()
 	imguiSeparator();
 }
 
+
+void Sample::setMeshName(const char* name)
+{
+	memcpy(m_meshName, name, 128);
+}
+
 void Sample::handleClick(const float* s, const float* p, bool shift)
 {
 	if (m_tool)
