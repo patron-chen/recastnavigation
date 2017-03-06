@@ -971,14 +971,24 @@ void Sample_TempObstacles::handleSettings()
 
 	if (imguiButton("Save"))
 	{
-		saveAll("all_tiles_tilecache.bin");
+		char path[256];
+		std::string temp = m_meshName;
+		temp = temp.substr(0, temp.length() - 4);
+		snprintf(path, 256, "./Output/%s.obnav", temp.c_str());
+		saveAll(path);
 	}
 
 	if (imguiButton("Load"))
 	{
 		dtFreeNavMesh(m_navMesh);
 		dtFreeTileCache(m_tileCache);
-		loadAll("all_tiles_tilecache.bin");
+
+		char path[256];
+		std::string temp = m_meshName;
+		temp = temp.substr(0, temp.length() - 4);
+		snprintf(path, 256, "./Output/%s.obnav", temp.c_str());
+
+		loadAll(path);
 		m_navQuery->init(m_navMesh, 2048);
 	}
 

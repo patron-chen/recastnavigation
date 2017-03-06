@@ -398,16 +398,26 @@ void Sample_TileMesh::handleSettings()
 	
 	imguiIndent();
 	imguiIndent();
-	
+
 	if (imguiButton("Save"))
 	{
-		saveAll("all_tiles_navmesh.bin", m_navMesh);
+		char path[256];
+		std::string temp = m_meshName;
+		temp = temp.substr(0, temp.length() - 4);
+		snprintf(path, 256, "./Output/%s.tilenav", temp.c_str());
+		saveAll(path, m_navMesh);
 	}
 
 	if (imguiButton("Load"))
 	{
 		dtFreeNavMesh(m_navMesh);
-		m_navMesh = loadAll("all_tiles_navmesh.bin");
+
+		char path[256];
+		std::string temp = m_meshName;
+		temp = temp.substr(0, temp.length() - 4);
+		snprintf(path, 256, "./Output/%s.tilenav", temp.c_str());
+
+		m_navMesh = loadAll(path);
 		m_navQuery->init(m_navMesh, 2048);
 	}
 
