@@ -77,12 +77,17 @@ class NavMeshTileTool : public SampleTool
 	Sample_TileMesh* m_sample;
 	float m_hitPos[3];
 	bool m_hitPosSet;
+
+	float m_bottomOffset;
+	float m_topOffset;
 	
 public:
 
 	NavMeshTileTool() :
 		m_sample(0),
-		m_hitPosSet(false)
+		m_hitPosSet(false),
+		m_bottomOffset(0.f),
+		m_topOffset(0.f)
 	{
 		m_hitPos[0] = m_hitPos[1] = m_hitPos[2] = 0;
 	}
@@ -113,6 +118,31 @@ public:
 			if (m_sample)
 				m_sample->removeAllTiles();
 		}
+
+		InputGeom* geom = m_sample->getInputGeom();
+		float height = 10.f;
+		if (geom)
+		{
+			const float* min = geom->getNavMeshBoundsMin();
+			const float* max = geom->getNavMeshBoundsMax();
+
+			height = max[1] - min[1];
+		}
+
+		imguiLabel("Tiles Params");
+		imguiSlider("Bottom Offset", &m_bottomOffset, 0.f, height, 0.1f);
+
+		float delta = height - m_bottomOffset;
+		if (m_topOffset >= delta)
+		{
+			m_topOffset = abs(delta);
+		}
+		imguiSlider("Top Offset", &m_topOffset, 0.f, delta, 0.1f);
+
+		char deltaHeight[128];
+		delta = delta - m_topOffset;
+		snprintf(deltaHeight, 127, "Delta Height : %.2f", delta > 0.f ? delta : 0.f);
+		imguiLabel(deltaHeight);
 	}
 
 	virtual void handleClick(const float* /*s*/, const float* p, bool shift)
@@ -124,7 +154,7 @@ public:
 			if (shift)
 				m_sample->removeTile(m_hitPos);
 			else
-				m_sample->buildTile(m_hitPos);
+				m_sample->buildTile(m_hitPos, m_bottomOffset, m_topOffset);
 		}
 	}
 
@@ -577,7 +607,7 @@ void Sample_TileMesh::handleRender()
 	// Draw bounds
 	const float* bmin = m_geom->getNavMeshBoundsMin();
 	const float* bmax = m_geom->getNavMeshBoundsMax();
-	duDebugDrawBoxWire(&m_dd, bmin[0],bmin[1],bmin[2], bmax[0],bmax[1],bmax[2], duRGBA(255,255,255,128), 1.0f);
+	duDebugDrawBoxWire(&m_dd, bmin[0], bmin[1], bmin[2], bmax[0], bmax[1], bmax[2], duRGBA(255, 255, 255, 128), 1.0f);
 	
 	// Tiling grid.
 	int gw = 0, gh = 0;
@@ -585,11 +615,11 @@ void Sample_TileMesh::handleRender()
 	const int tw = (gw + (int)m_tileSize-1) / (int)m_tileSize;
 	const int th = (gh + (int)m_tileSize-1) / (int)m_tileSize;
 	const float s = m_tileSize*m_cellSize;
-	duDebugDrawGridXZ(&m_dd, bmin[0],bmin[1],bmin[2], tw,th, s, duRGBA(0,0,0,64), 1.0f);
+	duDebugDrawGridXZ(&m_dd, bmin[0], bmin[1], bmin[2], tw, th, s, duRGBA(136, 0, 21, 128), 2.0f);
 	
 	// Draw active tile
-	duDebugDrawBoxWire(&m_dd, m_lastBuiltTileBmin[0],m_lastBuiltTileBmin[1],m_lastBuiltTileBmin[2],
-					   m_lastBuiltTileBmax[0],m_lastBuiltTileBmax[1],m_lastBuiltTileBmax[2], m_tileCol, 1.0f);
+	duDebugDrawBoxWire(&m_dd, m_lastBuiltTileBmin[0], m_lastBuiltTileBmin[1], m_lastBuiltTileBmin[2],
+		m_lastBuiltTileBmax[0], m_lastBuiltTileBmax[1], m_lastBuiltTileBmax[2], duRGBA(0, 0, 0, 255), 2.0f);
 		
 	if (m_navMesh && m_navQuery &&
 		(m_drawMode == DRAWMODE_NAVMESH ||
@@ -780,7 +810,7 @@ void Sample_TileMesh::collectSettings(BuildSettings& settings)
 	settings.tileSize = m_tileSize;
 }
 
-void Sample_TileMesh::buildTile(const float* pos)
+void Sample_TileMesh::buildTile(const float* pos, const float bottomOffset /* = 0.f */, const float topOffset /* = 0.f */)
 {
 	if (!m_geom) return;
 	if (!m_navMesh) return;
@@ -793,11 +823,11 @@ void Sample_TileMesh::buildTile(const float* pos)
 	const int ty = (int)((pos[2] - bmin[2]) / ts);
 	
 	m_lastBuiltTileBmin[0] = bmin[0] + tx*ts;
-	m_lastBuiltTileBmin[1] = bmin[1];
+	m_lastBuiltTileBmin[1] = bmin[1] + bottomOffset;
 	m_lastBuiltTileBmin[2] = bmin[2] + ty*ts;
 	
 	m_lastBuiltTileBmax[0] = bmin[0] + (tx+1)*ts;
-	m_lastBuiltTileBmax[1] = bmax[1];
+	m_lastBuiltTileBmax[1] = bmax[1] - topOffset;
 	m_lastBuiltTileBmax[2] = bmin[2] + (ty+1)*ts;
 	
 	m_tileCol = duRGBA(255,255,255,64);

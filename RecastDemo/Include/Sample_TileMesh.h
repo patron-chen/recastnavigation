@@ -97,7 +97,7 @@ public:
 	
 	void getTilePos(const float* pos, int& tx, int& ty);
 	
-	void buildTile(const float* pos);
+	void buildTile(const float* pos, const float bottomOffset = 0.f, const float topOffset = 0.f);
 	void removeTile(const float* pos);
 	void buildAllTiles();
 	void removeAllTiles();
