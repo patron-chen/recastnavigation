@@ -189,7 +189,7 @@ void Sample::handleCommonSettings()
 {
 	imguiLabel("Rasterization");
 	imguiSlider("Cell Size", &m_cellSize, 0.1f, 1.0f, 0.01f);
-	imguiSlider("Cell Height", &m_cellHeight, 0.1f, 1.0f, 0.01f);
+	imguiSlider("Cell Height", &m_cellHeight, 0.01f, 1.0f, 0.01f);
 	
 	if (m_geom)
 	{
