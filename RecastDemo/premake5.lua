@@ -171,7 +171,7 @@ project "RecastDemo"
 	configuration { "macosx" }
 		kind "ConsoleApp" -- xcode4 failes to run the project if using WindowedApp
 		includedirs { "Contrib/SDL/include" }
-		frameworkdirs { "Contrib/SDL/lib" }
+		frameworkdirs { "Contrib/SDL/lib/macos" }
 		buildoptions { "-Wunused-value -Wshadow -Wreorder -Wsign-compare -Wall" }
 		links { 
 			"OpenGL.framework", 
@@ -247,7 +247,7 @@ project "Tests"
 	configuration { "macosx" }
 		kind "ConsoleApp"
 		includedirs { "Contrib/SDL/include" }
-		frameworkdirs { "Contrib/SDL/lib" }
+		frameworkdirs { "Contrib/SDL/lib/macos" }
 		buildoptions { "-Wunused-value -Wshadow -Wreorder -Wsign-compare -Wall" }
 		links { 
 			"OpenGL.framework", 
