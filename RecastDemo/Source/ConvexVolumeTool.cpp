@@ -142,6 +142,28 @@ void ConvexVolumeTool::handleMenu()
 		m_areaType = SAMPLE_POLYAREA_GRASS;
 	if (imguiCheck("Jump", m_areaType == SAMPLE_POLYAREA_JUMP))
 		m_areaType = SAMPLE_POLYAREA_JUMP;
+	if (imguiCheck("Type0", m_areaType == SAMPLE_POLYAREA_TYPE_0))
+		m_areaType = SAMPLE_POLYAREA_TYPE_0;
+	if (imguiCheck("Type1", m_areaType == SAMPLE_POLYAREA_TYPE_1))
+		m_areaType = SAMPLE_POLYAREA_TYPE_1;
+	if (imguiCheck("Type2", m_areaType == SAMPLE_POLYAREA_TYPE_2))
+		m_areaType = SAMPLE_POLYAREA_TYPE_2;
+	if (imguiCheck("Type3", m_areaType == SAMPLE_POLYAREA_TYPE_3))
+		m_areaType = SAMPLE_POLYAREA_TYPE_3;
+	if (imguiCheck("Type4", m_areaType == SAMPLE_POLYAREA_TYPE_4))
+		m_areaType = SAMPLE_POLYAREA_TYPE_4;
+	if (imguiCheck("Type5", m_areaType == SAMPLE_POLYAREA_TYPE_5))
+		m_areaType = SAMPLE_POLYAREA_TYPE_5;
+	if (imguiCheck("Type6", m_areaType == SAMPLE_POLYAREA_TYPE_6))
+		m_areaType = SAMPLE_POLYAREA_TYPE_6;
+	if (imguiCheck("Type7", m_areaType == SAMPLE_POLYAREA_TYPE_7))
+		m_areaType = SAMPLE_POLYAREA_TYPE_7;
+	if (imguiCheck("Type8", m_areaType == SAMPLE_POLYAREA_TYPE_8))
+		m_areaType = SAMPLE_POLYAREA_TYPE_8;
+	if (imguiCheck("Type9", m_areaType == SAMPLE_POLYAREA_TYPE_9))
+		m_areaType = SAMPLE_POLYAREA_TYPE_9;
+	if (imguiCheck("Type10", m_areaType == SAMPLE_POLYAREA_TYPE_10))
+		m_areaType = SAMPLE_POLYAREA_TYPE_10;
 	imguiUnindent();
 
 	imguiSeparator();
@@ -248,7 +270,7 @@ void ConvexVolumeTool::handleRender()
 {
 	duDebugDraw& dd = m_sample->getDebugDraw();
 	
-	// Find height extent of the shape.
+	// Find height extents of the shape.
 	float minh = FLT_MAX, maxh = 0;
 	for (int i = 0; i < m_npts; ++i)
 		minh = rcMin(minh, m_pts[i*3+1]);

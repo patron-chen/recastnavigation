@@ -734,6 +734,50 @@ bool Sample_SoloMesh::handleBuild()
 			{
 				m_pmesh->flags[i] = SAMPLE_POLYFLAGS_WALK | SAMPLE_POLYFLAGS_DOOR;
 			}
+			else if (m_pmesh->areas[i] == SAMPLE_POLYAREA_TYPE_0)
+			{
+				m_pmesh->flags[i] = SAMPLE_POLYFLAGS_TYPE_0;
+			}
+			else if (m_pmesh->areas[i] == SAMPLE_POLYAREA_TYPE_1)
+			{
+				m_pmesh->flags[i] = SAMPLE_POLYFLAGS_TYPE_1;
+			}
+			else if (m_pmesh->areas[i] == SAMPLE_POLYAREA_TYPE_2)
+			{
+				m_pmesh->flags[i] = SAMPLE_POLYFLAGS_TYPE_2;
+			}
+			else if (m_pmesh->areas[i] == SAMPLE_POLYAREA_TYPE_3)
+			{
+				m_pmesh->flags[i] = SAMPLE_POLYFLAGS_TYPE_3;
+			}
+			else if (m_pmesh->areas[i] == SAMPLE_POLYAREA_TYPE_4)
+			{
+				m_pmesh->flags[i] = SAMPLE_POLYFLAGS_TYPE_4;
+			}
+			else if (m_pmesh->areas[i] == SAMPLE_POLYAREA_TYPE_5)
+			{
+				m_pmesh->flags[i] = SAMPLE_POLYFLAGS_TYPE_5;
+			}
+			else if (m_pmesh->areas[i] == SAMPLE_POLYAREA_TYPE_6)
+			{
+				m_pmesh->flags[i] = SAMPLE_POLYFLAGS_TYPE_6;
+			}
+			else if (m_pmesh->areas[i] == SAMPLE_POLYAREA_TYPE_7)
+			{
+				m_pmesh->flags[i] = SAMPLE_POLYFLAGS_TYPE_7;
+			}
+			else if (m_pmesh->areas[i] == SAMPLE_POLYAREA_TYPE_8)
+			{
+				m_pmesh->flags[i] = SAMPLE_POLYFLAGS_TYPE_8;
+			}
+			else if (m_pmesh->areas[i] == SAMPLE_POLYAREA_TYPE_9)
+			{
+				m_pmesh->flags[i] = SAMPLE_POLYFLAGS_TYPE_9;
+			}
+			else if (m_pmesh->areas[i] == SAMPLE_POLYAREA_TYPE_10)
+			{
+				m_pmesh->flags[i] = SAMPLE_POLYFLAGS_TYPE_10;
+			}
 		}
 
 

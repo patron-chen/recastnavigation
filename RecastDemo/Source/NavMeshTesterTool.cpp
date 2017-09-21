@@ -45,7 +45,7 @@
 // Uncomment this to dump all the requests in stdout.
 #define DUMP_REQS
 
-// Returns a random number [0..1]
+// Returns a random number [0..1)
 static float frand()
 {
 //	return ((float)(rand() & 0xffff)/(float)0xffff);
@@ -434,6 +434,61 @@ void NavMeshTesterTool::handleMenu()
 		m_filter.setIncludeFlags(m_filter.getIncludeFlags() ^ SAMPLE_POLYFLAGS_JUMP);
 		recalc();
 	}
+	if (imguiCheck("Type0", (m_filter.getIncludeFlags() & SAMPLE_POLYFLAGS_TYPE_0) != 0))
+	{
+		m_filter.setIncludeFlags(m_filter.getIncludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_0);
+		recalc();
+	}
+	if (imguiCheck("Type1", (m_filter.getIncludeFlags() & SAMPLE_POLYFLAGS_TYPE_1) != 0))
+	{
+		m_filter.setIncludeFlags(m_filter.getIncludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_1);
+		recalc();
+	}
+	if (imguiCheck("Type2", (m_filter.getIncludeFlags() & SAMPLE_POLYFLAGS_TYPE_2) != 0))
+	{
+		m_filter.setIncludeFlags(m_filter.getIncludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_2);
+		recalc();
+	}
+	if (imguiCheck("Type3", (m_filter.getIncludeFlags() & SAMPLE_POLYFLAGS_TYPE_3) != 0))
+	{
+		m_filter.setIncludeFlags(m_filter.getIncludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_3);
+		recalc();
+	}
+	if (imguiCheck("Type4", (m_filter.getIncludeFlags() & SAMPLE_POLYFLAGS_TYPE_4) != 0))
+	{
+		m_filter.setIncludeFlags(m_filter.getIncludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_4);
+		recalc();
+	}
+	if (imguiCheck("Type5", (m_filter.getIncludeFlags() & SAMPLE_POLYFLAGS_TYPE_5) != 0))
+	{
+		m_filter.setIncludeFlags(m_filter.getIncludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_5);
+		recalc();
+	}
+	if (imguiCheck("Type6", (m_filter.getIncludeFlags() & SAMPLE_POLYFLAGS_TYPE_6) != 0))
+	{
+		m_filter.setIncludeFlags(m_filter.getIncludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_6);
+		recalc();
+	}
+	if (imguiCheck("Type7", (m_filter.getIncludeFlags() & SAMPLE_POLYFLAGS_TYPE_7) != 0))
+	{
+		m_filter.setIncludeFlags(m_filter.getIncludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_7);
+		recalc();
+	}
+	if (imguiCheck("Type8", (m_filter.getIncludeFlags() & SAMPLE_POLYFLAGS_TYPE_8) != 0))
+	{
+		m_filter.setIncludeFlags(m_filter.getIncludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_8);
+		recalc();
+	}
+	if (imguiCheck("Type9", (m_filter.getIncludeFlags() & SAMPLE_POLYFLAGS_TYPE_9) != 0))
+	{
+		m_filter.setIncludeFlags(m_filter.getIncludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_9);
+		recalc();
+	}
+	if (imguiCheck("Type10", (m_filter.getIncludeFlags() & SAMPLE_POLYFLAGS_TYPE_10) != 0))
+	{
+		m_filter.setIncludeFlags(m_filter.getIncludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_10);
+		recalc();
+	}
 	imguiUnindent();
 
 	imguiSeparator();
@@ -458,6 +513,61 @@ void NavMeshTesterTool::handleMenu()
 	if (imguiCheck("Jump", (m_filter.getExcludeFlags() & SAMPLE_POLYFLAGS_JUMP) != 0))
 	{
 		m_filter.setExcludeFlags(m_filter.getExcludeFlags() ^ SAMPLE_POLYFLAGS_JUMP);
+		recalc();
+	}
+	if (imguiCheck("Type0", (m_filter.getExcludeFlags() & SAMPLE_POLYFLAGS_TYPE_0) != 0))
+	{
+		m_filter.setExcludeFlags(m_filter.getExcludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_0);
+		recalc();
+	}
+	if (imguiCheck("Type1", (m_filter.getExcludeFlags() & SAMPLE_POLYFLAGS_TYPE_1) != 0))
+	{
+		m_filter.setExcludeFlags(m_filter.getExcludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_1);
+		recalc();
+	}
+	if (imguiCheck("Type2", (m_filter.getExcludeFlags() & SAMPLE_POLYFLAGS_TYPE_2) != 0))
+	{
+		m_filter.setExcludeFlags(m_filter.getExcludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_2);
+		recalc();
+	}
+	if (imguiCheck("Type3", (m_filter.getExcludeFlags() & SAMPLE_POLYFLAGS_TYPE_3) != 0))
+	{
+		m_filter.setExcludeFlags(m_filter.getExcludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_3);
+		recalc();
+	}
+	if (imguiCheck("Type4", (m_filter.getExcludeFlags() & SAMPLE_POLYFLAGS_TYPE_4) != 0))
+	{
+		m_filter.setExcludeFlags(m_filter.getExcludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_4);
+		recalc();
+	}
+	if (imguiCheck("Type5", (m_filter.getExcludeFlags() & SAMPLE_POLYFLAGS_TYPE_5) != 0))
+	{
+		m_filter.setExcludeFlags(m_filter.getExcludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_5);
+		recalc();
+	}
+	if (imguiCheck("Type6", (m_filter.getExcludeFlags() & SAMPLE_POLYFLAGS_TYPE_6) != 0))
+	{
+		m_filter.setExcludeFlags(m_filter.getExcludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_6);
+		recalc();
+	}
+	if (imguiCheck("Type7", (m_filter.getExcludeFlags() & SAMPLE_POLYFLAGS_TYPE_7) != 0))
+	{
+		m_filter.setExcludeFlags(m_filter.getExcludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_7);
+		recalc();
+	}
+	if (imguiCheck("Type8", (m_filter.getExcludeFlags() & SAMPLE_POLYFLAGS_TYPE_8) != 0))
+	{
+		m_filter.setExcludeFlags(m_filter.getExcludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_8);
+		recalc();
+	}
+	if (imguiCheck("Type9", (m_filter.getExcludeFlags() & SAMPLE_POLYFLAGS_TYPE_9) != 0))
+	{
+		m_filter.setExcludeFlags(m_filter.getExcludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_9);
+		recalc();
+	}
+	if (imguiCheck("Type10", (m_filter.getExcludeFlags() & SAMPLE_POLYFLAGS_TYPE_10) != 0))
+	{
+		m_filter.setExcludeFlags(m_filter.getExcludeFlags() ^ SAMPLE_POLYFLAGS_TYPE_10);
 		recalc();
 	}
 	imguiUnindent();
